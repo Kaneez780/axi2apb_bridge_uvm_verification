@@ -1387,3 +1387,1424 @@ class axi2apb_error_response_virtual_sequence
 
 
 endclass
+
+// ============================================================
+// BACK-TO-BACK READ VIRTUAL SEQUENCE
+// ============================================================
+
+class axi2apb_back_to_back_read_virtual_sequence
+  extends uvm_sequence;
+
+  `uvm_object_utils(
+    axi2apb_back_to_back_read_virtual_sequence
+  )
+
+
+  // --------------------------------------------------------------------------
+  // This gives the virtual sequence access to:
+  //
+  //   p_sequencer.axi_sequencer
+  //   p_sequencer.apb_sequencer
+  //
+  // --------------------------------------------------------------------------
+
+  `uvm_declare_p_sequencer(
+    axi2apb_virtual_sequencer
+  )
+
+
+  // --------------------------------------------------------------------------
+  // Constructor
+  // --------------------------------------------------------------------------
+
+  function new(
+    string name =
+      "axi2apb_back_to_back_read_virtual_sequence"
+  );
+
+    super.new(name);
+
+  endfunction
+
+
+  // --------------------------------------------------------------------------
+  // BODY
+  // --------------------------------------------------------------------------
+
+  virtual task body();
+
+    axi_master_item axi_req;
+    apb_slave_item  apb_req;
+
+
+    `uvm_info(
+      "B2B_RD_VSEQ",
+      "Starting back-to-back AXI read virtual sequence",
+      UVM_LOW
+    )
+
+
+    // ========================================================================
+    // Two sides must run at the same time:
+    //
+    // AXI THREAD:
+    //   Generates three READ requests.
+    //
+    // APB THREAD:
+    //   Supplies three slave responses when DUT generates APB requests.
+    //
+    // ========================================================================
+
+    fork
+
+
+      // ======================================================================
+      // AXI MASTER SIDE
+      // ======================================================================
+
+      begin : AXI_READ_THREAD
+
+
+        // --------------------------------------------------------------------
+        // READ #1
+        //
+        // Address = 0x00000100
+        // ID      = 0x0011
+        // USER    = 0x011
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b0;
+
+            addr == 32'h0000_0100;
+
+            id == 16'h0011;
+
+            user == 10'h011;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "B2B_RD_VSEQ",
+          "AXI READ #1 completed",
+          UVM_MEDIUM
+        )
+
+
+        // --------------------------------------------------------------------
+        // READ #2
+        //
+        // Address = 0x00000200
+        // ID      = 0x0022
+        // USER    = 0x022
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b0;
+
+            addr == 32'h0000_0200;
+
+            id == 16'h0022;
+
+            user == 10'h022;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "B2B_RD_VSEQ",
+          "AXI READ #2 completed",
+          UVM_MEDIUM
+        )
+
+
+        // --------------------------------------------------------------------
+        // READ #3
+        //
+        // Address = 0x00000300
+        // ID      = 0x0033
+        // USER    = 0x033
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b0;
+
+            addr == 32'h0000_0300;
+
+            id == 16'h0033;
+
+            user == 10'h033;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "B2B_RD_VSEQ",
+          "AXI READ #3 completed",
+          UVM_MEDIUM
+        )
+
+
+      end : AXI_READ_THREAD
+
+
+
+      // ======================================================================
+      // APB SLAVE SIDE
+      // ======================================================================
+
+      begin : APB_RESPONSE_THREAD
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE FOR READ #1
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h1111_1111;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE FOR READ #2
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h2222_2222;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE FOR READ #3
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h3333_3333;
+
+          }
+        )
+
+
+      end : APB_RESPONSE_THREAD
+
+
+    join
+
+
+    `uvm_info(
+      "B2B_RD_VSEQ",
+      "Back-to-back AXI read virtual sequence completed",
+      UVM_LOW
+    )
+
+
+  endtask : body
+
+
+endclass : axi2apb_back_to_back_read_virtual_sequence
+
+// ============================================================================
+// BACK-TO-BACK WRITE VIRTUAL SEQUENCE
+// ============================================================================
+
+class axi2apb_back_to_back_write_virtual_sequence
+  extends uvm_sequence;
+
+  `uvm_object_utils(
+    axi2apb_back_to_back_write_virtual_sequence
+  )
+
+  `uvm_declare_p_sequencer(
+    axi2apb_virtual_sequencer
+  )
+
+
+  function new(
+    string name =
+      "axi2apb_back_to_back_write_virtual_sequence"
+  );
+
+    super.new(name);
+
+  endfunction
+
+
+  virtual task body();
+
+    axi_master_item axi_req;
+    apb_slave_item  apb_req;
+
+
+    `uvm_info(
+      "B2B_WR_VSEQ",
+      "Starting back-to-back AXI write virtual sequence",
+      UVM_LOW
+    )
+
+
+    // ========================================================================
+    // AXI and APB sides execute concurrently.
+    // ========================================================================
+
+    fork
+
+
+      // ======================================================================
+      // AXI MASTER SIDE
+      // ======================================================================
+
+      begin : AXI_WRITE_THREAD
+
+
+        // --------------------------------------------------------------------
+        // WRITE #1
+        //
+        // Address = 0x00000100
+        // Data    = 0x11111111
+        // ID      = 0x0011
+        // USER    = 0x011
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b1;
+
+            addr == 32'h0000_0100;
+
+            data == 32'h1111_1111;
+
+            id == 16'h0011;
+
+            user == 10'h011;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "B2B_WR_VSEQ",
+          "AXI WRITE #1 completed",
+          UVM_MEDIUM
+        )
+
+
+        // --------------------------------------------------------------------
+        // WRITE #2
+        //
+        // Address = 0x00000200
+        // Data    = 0x22222222
+        // ID      = 0x0022
+        // USER    = 0x022
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b1;
+
+            addr == 32'h0000_0200;
+
+            data == 32'h2222_2222;
+
+            id == 16'h0022;
+
+            user == 10'h022;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "B2B_WR_VSEQ",
+          "AXI WRITE #2 completed",
+          UVM_MEDIUM
+        )
+
+
+        // --------------------------------------------------------------------
+        // WRITE #3
+        //
+        // Address = 0x00000300
+        // Data    = 0x33333333
+        // ID      = 0x0033
+        // USER    = 0x033
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b1;
+
+            addr == 32'h0000_0300;
+
+            data == 32'h3333_3333;
+
+            id == 16'h0033;
+
+            user == 10'h033;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "B2B_WR_VSEQ",
+          "AXI WRITE #3 completed",
+          UVM_MEDIUM
+        )
+
+
+      end : AXI_WRITE_THREAD
+
+
+
+      // ======================================================================
+      // APB SLAVE RESPONSE SIDE
+      //
+      // Three normal APB responses.
+      // No wait states.
+      // No PSLVERR.
+      // ======================================================================
+
+      begin : APB_RESPONSE_THREAD
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE FOR WRITE #1
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE FOR WRITE #2
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE FOR WRITE #3
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+      end : APB_RESPONSE_THREAD
+
+
+    join
+
+
+    `uvm_info(
+      "B2B_WR_VSEQ",
+      "Back-to-back AXI write virtual sequence completed",
+      UVM_LOW
+    )
+
+
+  endtask : body
+
+
+endclass : axi2apb_back_to_back_write_virtual_sequence
+
+
+// ============================================================================
+// MIXED READ / WRITE VIRTUAL SEQUENCE
+// ============================================================================
+
+class axi2apb_mixed_traffic_virtual_sequence
+  extends uvm_sequence;
+
+  `uvm_object_utils(
+    axi2apb_mixed_traffic_virtual_sequence
+  )
+
+  `uvm_declare_p_sequencer(
+    axi2apb_virtual_sequencer
+  )
+
+
+  function new(
+    string name = "axi2apb_mixed_traffic_virtual_sequence"
+  );
+
+    super.new(name);
+
+  endfunction
+
+
+  virtual task body();
+
+    axi_master_item axi_req;
+    apb_slave_item  apb_req;
+
+
+    `uvm_info(
+      "MIXED_VSEQ",
+      "Starting mixed AXI read/write traffic",
+      UVM_LOW
+    )
+
+
+    fork
+
+
+      // ======================================================================
+      // AXI MASTER THREAD
+      // ======================================================================
+
+      begin : AXI_MIXED_THREAD
+
+
+        // --------------------------------------------------------------------
+        // TRANSACTION #1 : WRITE 0x100
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b1;
+
+            addr == 32'h0000_0100;
+
+            data == 32'hAAAA_1111;
+
+            id == 16'h0011;
+
+            user == 10'h011;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "MIXED_VSEQ",
+          "WRITE #1 completed",
+          UVM_MEDIUM
+        )
+
+
+        // --------------------------------------------------------------------
+        // TRANSACTION #2 : READ 0x100
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b0;
+
+            addr == 32'h0000_0100;
+
+            id == 16'h0022;
+
+            user == 10'h022;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "MIXED_VSEQ",
+          "READ #1 completed",
+          UVM_MEDIUM
+        )
+
+
+        // --------------------------------------------------------------------
+        // TRANSACTION #3 : WRITE 0x200
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b1;
+
+            addr == 32'h0000_0200;
+
+            data == 32'hBBBB_2222;
+
+            id == 16'h0033;
+
+            user == 10'h033;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "MIXED_VSEQ",
+          "WRITE #2 completed",
+          UVM_MEDIUM
+        )
+
+
+        // --------------------------------------------------------------------
+        // TRANSACTION #4 : READ 0x200
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b0;
+
+            addr == 32'h0000_0200;
+
+            id == 16'h0044;
+
+            user == 10'h044;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "MIXED_VSEQ",
+          "READ #2 completed",
+          UVM_MEDIUM
+        )
+
+
+        // --------------------------------------------------------------------
+        // TRANSACTION #5 : READ 0x300
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b0;
+
+            addr == 32'h0000_0300;
+
+            id == 16'h0055;
+
+            user == 10'h055;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "MIXED_VSEQ",
+          "READ #3 completed",
+          UVM_MEDIUM
+        )
+
+
+        // --------------------------------------------------------------------
+        // TRANSACTION #6 : WRITE 0x300
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b1;
+
+            addr == 32'h0000_0300;
+
+            data == 32'hCCCC_3333;
+
+            id == 16'h0066;
+
+            user == 10'h066;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "MIXED_VSEQ",
+          "WRITE #3 completed",
+          UVM_MEDIUM
+        )
+
+
+      end : AXI_MIXED_THREAD
+
+
+
+      // ======================================================================
+      // APB SLAVE RESPONSE THREAD
+      //
+      // There are six AXI transactions, so we provide six APB responses.
+      //
+      // ======================================================================
+
+      begin : APB_RESPONSE_THREAD
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE #1 : WRITE 0x100
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE #2 : READ 0x100
+        //
+        // The APB driver's memory should return AAAA1111
+        // because it was written in transaction #1.
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE #3 : WRITE 0x200
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE #4 : READ 0x200
+        //
+        // APB memory should return BBBB2222.
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE #5 : READ 0x300
+        //
+        // This address has not been written yet.
+        // Use a known fallback read value.
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h1234_5678;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE #6 : WRITE 0x300
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+      end : APB_RESPONSE_THREAD
+
+
+    join
+
+
+    `uvm_info(
+      "MIXED_VSEQ",
+      "Mixed AXI read/write virtual sequence completed",
+      UVM_LOW
+    )
+
+
+  endtask : body
+
+
+endclass : axi2apb_mixed_traffic_virtual_sequence
+
+
+// ============================================================================
+// AXI ID / USER PROPAGATION VIRTUAL SEQUENCE
+//
+// Purpose:
+//   Apply different AXI ID and USER values on write/read transactions.
+//   Check that the DUT preserves the AXI response information:
+//
+//       WRITE : AWID   -> BID
+//               AWUSER -> BUSER
+//
+//       READ  : ARID   -> RID
+//               ARUSER -> RUSER
+//
+// APB side responds normally.
+// No wait states.
+// No backpressure.
+// No PSLVERR.
+// ============================================================================
+
+class axi2apb_id_user_virtual_sequence
+  extends uvm_sequence;
+
+  `uvm_object_utils(
+    axi2apb_id_user_virtual_sequence
+  )
+
+  `uvm_declare_p_sequencer(
+    axi2apb_virtual_sequencer
+  )
+
+
+  function new(
+    string name = "axi2apb_id_user_virtual_sequence"
+  );
+
+    super.new(name);
+
+  endfunction
+
+
+  virtual task body();
+
+    axi_master_item axi_req;
+    apb_slave_item  apb_req;
+
+
+    `uvm_info(
+      "ID_USER_VSEQ",
+      "Starting AXI ID/USER propagation test",
+      UVM_LOW
+    )
+
+
+    fork
+
+
+      // ======================================================================
+      // AXI MASTER SIDE
+      // ======================================================================
+
+      begin : AXI_THREAD
+
+
+        // --------------------------------------------------------------------
+        // TRANSACTION #1 : WRITE
+        //
+        // ID   = 0x0001
+        // USER = 0x001
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b1;
+
+            addr == 32'h0000_0100;
+
+            data == 32'hA1A1_1111;
+
+            id == 16'h0001;
+
+            user == 10'h001;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "ID_USER_VSEQ",
+          "WRITE #1 completed: ID=0x0001 USER=0x001",
+          UVM_MEDIUM
+        )
+
+
+
+        // --------------------------------------------------------------------
+        // TRANSACTION #2 : READ
+        //
+        // Use different ID/USER values from the write.
+        //
+        // ID   = 0x1234
+        // USER = 0x155
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b0;
+
+            addr == 32'h0000_0100;
+
+            id == 16'h1234;
+
+            user == 10'h155;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "ID_USER_VSEQ",
+          "READ #1 completed: ID=0x1234 USER=0x155",
+          UVM_MEDIUM
+        )
+
+
+
+        // --------------------------------------------------------------------
+        // TRANSACTION #3 : WRITE
+        //
+        // Use a high ID/USER pattern.
+        //
+        // ID   = 0xAAAA
+        // USER = 0x2AA
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b1;
+
+            addr == 32'h0000_0200;
+
+            data == 32'hB2B2_2222;
+
+            id == 16'hAAAA;
+
+            user == 10'h2AA;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "ID_USER_VSEQ",
+          "WRITE #2 completed: ID=0xAAAA USER=0x2AA",
+          UVM_MEDIUM
+        )
+
+
+
+        // --------------------------------------------------------------------
+        // TRANSACTION #4 : READ
+        //
+        // Maximum ID and USER values.
+        //
+        // ID   = 0xFFFF
+        // USER = 0x3FF
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          axi_req,
+          p_sequencer.axi_sequencer,
+          {
+
+            write == 1'b0;
+
+            addr == 32'h0000_0200;
+
+            id == 16'hFFFF;
+
+            user == 10'h3FF;
+
+            len == 8'd0;
+
+            size == 3'd2;
+
+            burst == 2'b01;
+
+            strb == 4'hF;
+
+            last == 1'b1;
+
+            bready_delay == 0;
+
+            rready_delay == 0;
+
+          }
+        )
+
+
+        `uvm_info(
+          "ID_USER_VSEQ",
+          "READ #2 completed: ID=0xFFFF USER=0x3FF",
+          UVM_MEDIUM
+        )
+
+
+      end : AXI_THREAD
+
+
+
+      // ======================================================================
+      // APB SLAVE RESPONSE SIDE
+      //
+      // Four AXI transactions -> four APB responses.
+      // ======================================================================
+
+      begin : APB_THREAD
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE #1 : WRITE 0x100
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE #2 : READ 0x100
+        //
+        // APB memory should return A1A11111 written above.
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE #3 : WRITE 0x200
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+        // --------------------------------------------------------------------
+        // RESPONSE #4 : READ 0x200
+        //
+        // APB memory should return B2B22222 written above.
+        // --------------------------------------------------------------------
+
+        `uvm_do_on_with(
+          apb_req,
+          p_sequencer.apb_sequencer,
+          {
+
+            wait_cycles == 0;
+
+            inject_error == 1'b0;
+
+            default_read_data == 32'h0000_0000;
+
+          }
+        )
+
+
+      end : APB_THREAD
+
+
+    join
+
+
+    `uvm_info(
+      "ID_USER_VSEQ",
+      "AXI ID/USER propagation virtual sequence completed",
+      UVM_LOW
+    )
+
+
+  endtask : body
+
+
+endclass : axi2apb_id_user_virtual_sequence
+

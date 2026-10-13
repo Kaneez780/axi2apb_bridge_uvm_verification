@@ -1,0 +1,152 @@
+
+Note-[RT_BS] Larger stack needed
+  Note: Bumping stack limit from 8192 to 8250 Kbytes.
+
+Chronologic VCS simulator copyright 1991-2016
+Contains Synopsys proprietary information.
+Compiler version L-2016.06_Full64; Runtime version L-2016.06_Full64;  Oct 14 00:01 2026
+UVM_INFO /usr/synopsys/vcs-L-2016.06//etc/uvm-1.2/base/uvm_root.svh(402) @ 0: reporter [UVM/RELNOTES] 
+----------------------------------------------------------------
+UVM-1.2.Synopsys
+(C) 2007-2014 Mentor Graphics Corporation
+(C) 2007-2014 Cadence Design Systems, Inc.
+(C) 2006-2014 Synopsys, Inc.
+(C) 2011-2013 Cypress Semiconductor Corp.
+(C) 2013-2014 NVIDIA Corporation
+----------------------------------------------------------------
+
+  ***********       IMPORTANT RELEASE NOTES         ************
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_NO_DEPRECATED undefined.
+  See http://www.eda.org/svdb/view.php?id=3313 for more details.
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_OBJECT_DO_NOT_NEED_CONSTRUCTOR undefined.
+  See http://www.eda.org/svdb/view.php?id=3770 for more details.
+
+      (Specify +UVM_NO_RELNOTES to turn off this notice)
+
+
+ VCS Coverage Metrics Release L-2016.06_Full64 Copyright (c) 1991-2016 by Synopsys Inc.
+UVM_INFO @ 0: reporter [RNTST] Running test axi2apb_id_user_test...
+VCD+ Writer L-2016.06_Full64 Copyright (c) 1991-2016 by Synopsys Inc.
+UVM_INFO ../tb/tests/axi2apb_tests.sv(923) @ 0: uvm_test_top [ID_USER_TEST] axi2apb_id_user_test build_phase executed
+
+Note-[FCICIO] Instance coverage is ON
+/root/Documents/axi2apb-uvm-verification-v1/sim/../tb/environment/axi2apb_coverage.sv, 35
+axi2apb_pkg, "axi2apb_pkg::axi2apb_coverage::axi_cg"
+  Instance coverage is set (option.per_instance = 1) for covergroup 
+  'axi2apb_pkg::axi2apb_coverage::axi_cg'
+  
+  Covergroup Instance: axi2apb_tb_top.me.obj.axi_cg 
+  Design hierarchy: axi2apb_pkg
+
+
+Note-[FCICIO] Instance coverage is ON
+/root/Documents/axi2apb-uvm-verification-v1/sim/../tb/environment/axi2apb_coverage.sv, 199
+axi2apb_pkg, "axi2apb_pkg::axi2apb_coverage::apb_cg"
+  Instance coverage is set (option.per_instance = 1) for covergroup 
+  'axi2apb_pkg::axi2apb_coverage::apb_cg'
+  
+  Covergroup Instance: axi2apb_tb_top.me.obj.apb_cg 
+  Design hierarchy: axi2apb_pkg
+
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(30) @ 0: uvm_test_top.env.axi_agent.driver [AXI_DRV] axi_master_driver build_phase executed
+UVM_INFO ../tb/environment/axi2apb_coverage.sv(333) @ 0: uvm_test_top.env.coverage [COV] axi2apb_coverage build_phase executed
+UVM_INFO ../tb/environment/axi2apb_scoreboard.sv(106) @ 0: uvm_test_top.env.scoreboard [SCB] axi2apb_scoreboard build_phase executed
+UVM_INFO ../tb/sequences/axi2apb_sequence.sv(349) @ 0: uvm_test_top.env.virtual_sequencer [VSEQ] axi2apb_virtual_sequencer build_phase executed
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(81) @ 0: uvm_test_top.env.axi_agent.driver [AXI_DRV] axi_master_driver run_phase started
+UVM_INFO ../tb/tests/axi2apb_tests.sv(946) @ 0: uvm_test_top [ID_USER_TEST] AXI ID/USER propagation test started
+UVM_INFO ../tb/sequences/axi2apb_sequence.sv(2490) @ 0: uvm_test_top.env.virtual_sequencer@@vseq [ID_USER_VSEQ] Starting AXI ID/USER propagation test
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(125) @ 45: uvm_test_top.env.axi_agent.driver [AXI_DRV] WRITE addr=0x00000100 data=0xa1a11111 id=0x0001
+UVM_INFO ../tb/axi_master_agent/axi_master_monitor.sv(105) @ 55: uvm_test_top.env.axi_agent.monitor [AXI_MON] Captured AW: addr=0x00000100 id=0x0001
+UVM_INFO ../tb/axi_master_agent/axi_master_monitor.sv(130) @ 55: uvm_test_top.env.axi_agent.monitor [AXI_MON] Captured W: data=0xa1a11111
+UVM_INFO ../tb/apb_slave_agent/apb_slave_monitor.sv(32) @ 85: uvm_test_top.env.apb_agent.monitor [APB_MON] TRANSFER addr=0x00000100 write=1 wdata=0xa1a11111 rdata=0x00000000
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(271) @ 105: uvm_test_top.env.axi_agent.driver [AXI_DRV] BVALID detected - delaying BREADY for 0 cycles
+UVM_INFO ../tb/axi_master_agent/axi_master_monitor.sv(191) @ 115: uvm_test_top.env.axi_agent.monitor [AXI_MON] WRITE COMPLETE addr=0x00000100 id=0x0001 BID=0x0001
+UVM_INFO ../tb/environment/axi2apb_scoreboard.sv(436) @ 115: uvm_test_top.env.scoreboard [SCB] Matched WRITE conversion at address 0x00000100
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(318) @ 115: uvm_test_top.env.axi_agent.driver [AXI_DRV] WRITE RESPONSE BID=0x0001 BRESP=0
+UVM_INFO ../tb/sequences/axi2apb_sequence.sv(2547) @ 115: uvm_test_top.env.virtual_sequencer@@vseq [ID_USER_VSEQ] WRITE #1 completed: ID=0x0001 USER=0x001
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(342) @ 115: uvm_test_top.env.axi_agent.driver [AXI_DRV] READ addr=0x00000100 id=0x1234
+UVM_INFO ../tb/axi_master_agent/axi_master_monitor.sv(263) @ 135: uvm_test_top.env.axi_agent.monitor [AXI_MON] Captured AR: addr=0x00000100 id=0x1234 user=0x155
+UVM_INFO ../tb/apb_slave_agent/apb_slave_monitor.sv(32) @ 155: uvm_test_top.env.apb_agent.monitor [APB_MON] TRANSFER addr=0x00000100 write=0 wdata=0x00000000 rdata=0xa1a11111
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(434) @ 175: uvm_test_top.env.axi_agent.driver [AXI_DRV] RVALID detected - delaying RREADY for 0 cycles
+UVM_INFO ../tb/axi_master_agent/axi_master_monitor.sv(344) @ 185: uvm_test_top.env.axi_agent.monitor [AXI_MON] READ COMPLETE addr=0x00000100 request_id=0x1234 RID=0x1234 data=0xa1a11111
+UVM_INFO ../tb/environment/axi2apb_scoreboard.sv(436) @ 185: uvm_test_top.env.scoreboard [SCB] Matched  READ conversion at address 0x00000100
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(494) @ 185: uvm_test_top.env.axi_agent.driver [AXI_DRV] READ RESPONSE RID=0x1234 RDATA=0xa1a11111 RRESP=0 RLAST=1
+UVM_INFO ../tb/sequences/axi2apb_sequence.sv(2595) @ 185: uvm_test_top.env.virtual_sequencer@@vseq [ID_USER_VSEQ] READ #1 completed: ID=0x1234 USER=0x155
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(125) @ 185: uvm_test_top.env.axi_agent.driver [AXI_DRV] WRITE addr=0x00000200 data=0xb2b22222 id=0xaaaa
+UVM_INFO ../tb/axi_master_agent/axi_master_monitor.sv(105) @ 205: uvm_test_top.env.axi_agent.monitor [AXI_MON] Captured AW: addr=0x00000200 id=0xaaaa
+UVM_INFO ../tb/axi_master_agent/axi_master_monitor.sv(130) @ 205: uvm_test_top.env.axi_agent.monitor [AXI_MON] Captured W: data=0xb2b22222
+UVM_INFO ../tb/apb_slave_agent/apb_slave_monitor.sv(32) @ 225: uvm_test_top.env.apb_agent.monitor [APB_MON] TRANSFER addr=0x00000200 write=1 wdata=0xb2b22222 rdata=0x00000000
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(271) @ 245: uvm_test_top.env.axi_agent.driver [AXI_DRV] BVALID detected - delaying BREADY for 0 cycles
+UVM_INFO ../tb/axi_master_agent/axi_master_monitor.sv(191) @ 255: uvm_test_top.env.axi_agent.monitor [AXI_MON] WRITE COMPLETE addr=0x00000200 id=0xaaaa BID=0xaaaa
+UVM_INFO ../tb/environment/axi2apb_scoreboard.sv(436) @ 255: uvm_test_top.env.scoreboard [SCB] Matched WRITE conversion at address 0x00000200
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(318) @ 255: uvm_test_top.env.axi_agent.driver [AXI_DRV] WRITE RESPONSE BID=0xaaaa BRESP=0
+UVM_INFO ../tb/sequences/axi2apb_sequence.sv(2645) @ 255: uvm_test_top.env.virtual_sequencer@@vseq [ID_USER_VSEQ] WRITE #2 completed: ID=0xAAAA USER=0x2AA
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(342) @ 255: uvm_test_top.env.axi_agent.driver [AXI_DRV] READ addr=0x00000200 id=0xffff
+UVM_INFO ../tb/axi_master_agent/axi_master_monitor.sv(263) @ 275: uvm_test_top.env.axi_agent.monitor [AXI_MON] Captured AR: addr=0x00000200 id=0xffff user=0x3ff
+UVM_INFO ../tb/apb_slave_agent/apb_slave_monitor.sv(32) @ 295: uvm_test_top.env.apb_agent.monitor [APB_MON] TRANSFER addr=0x00000200 write=0 wdata=0x00000000 rdata=0xb2b22222
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(434) @ 315: uvm_test_top.env.axi_agent.driver [AXI_DRV] RVALID detected - delaying RREADY for 0 cycles
+UVM_INFO ../tb/axi_master_agent/axi_master_monitor.sv(344) @ 325: uvm_test_top.env.axi_agent.monitor [AXI_MON] READ COMPLETE addr=0x00000200 request_id=0xffff RID=0xffff data=0xb2b22222
+UVM_INFO ../tb/environment/axi2apb_scoreboard.sv(436) @ 325: uvm_test_top.env.scoreboard [SCB] Matched  READ conversion at address 0x00000200
+UVM_INFO ../tb/axi_master_agent/axi_master_driver.sv(494) @ 325: uvm_test_top.env.axi_agent.driver [AXI_DRV] READ RESPONSE RID=0xffff RDATA=0xb2b22222 RRESP=0 RLAST=1
+UVM_INFO ../tb/sequences/axi2apb_sequence.sv(2693) @ 325: uvm_test_top.env.virtual_sequencer@@vseq [ID_USER_VSEQ] READ #2 completed: ID=0xFFFF USER=0x3FF
+UVM_INFO ../tb/sequences/axi2apb_sequence.sv(2799) @ 325: uvm_test_top.env.virtual_sequencer@@vseq [ID_USER_VSEQ] AXI ID/USER propagation virtual sequence completed
+UVM_INFO ../tb/tests/axi2apb_tests.sv(992) @ 375: uvm_test_top [ID_USER_TEST] AXI ID/USER propagation test completed
+UVM_INFO /usr/synopsys/vcs-L-2016.06//etc/uvm-1.2/base/uvm_objection.svh(1270) @ 375: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+UVM_INFO ../tb/environment/axi2apb_scoreboard.sv(479) @ 375: uvm_test_top.env.scoreboard [SCB] axi2apb_scoreboard check_phase executed
+UVM_INFO ../tb/environment/axi2apb_coverage.sv(435) @ 375: uvm_test_top.env.coverage [COV] AXI Functional Coverage = 80.00%
+UVM_INFO ../tb/environment/axi2apb_coverage.sv(445) @ 375: uvm_test_top.env.coverage [COV] APB Functional Coverage = 61.11%
+UVM_INFO ../tb/environment/axi2apb_coverage.sv(455) @ 375: uvm_test_top.env.coverage [COV] axi2apb_coverage report_phase executed
+UVM_INFO ../tb/environment/axi2apb_scoreboard.sv(519) @ 375: uvm_test_top.env.scoreboard [SCB] axi2apb_scoreboard report_phase executed
+UVM_INFO ../tb/environment/axi2apb_scoreboard.sv(526) @ 375: uvm_test_top.env.scoreboard [SCB] Summary: AXI_WR=2 AXI_RD=2 APB_WR=2 APB_RD=2 PSLVERR=0
+UVM_INFO ../tb/environment/axi2apb_scoreboard.sv(543) @ 375: uvm_test_top.env.scoreboard [SCB] TEST PASS: matched transactions=4
+UVM_INFO ../tb/tests/axi2apb_tests.sv(1017) @ 375: uvm_test_top [ID_USER_TEST] axi2apb_id_user_test report_phase executed
+UVM_INFO /usr/synopsys/vcs-L-2016.06//etc/uvm-1.2/base/uvm_report_catcher.svh(705) @ 375: reporter [UVM/REPORT/CATCHER] 
+--- UVM Report catcher Summary ---
+
+
+Number of demoted UVM_FATAL reports  :    0
+Number of demoted UVM_ERROR reports  :    0
+Number of demoted UVM_WARNING reports:    0
+Number of caught UVM_FATAL reports   :    0
+Number of caught UVM_ERROR reports   :    0
+Number of caught UVM_WARNING reports :    0
+
+UVM_INFO /usr/synopsys/vcs-L-2016.06//etc/uvm-1.2/base/uvm_report_server.svh(894) @ 375: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO :   56
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    0
+** Report counts by id
+[APB_MON]     4
+[AXI_DRV]    14
+[AXI_MON]    10
+[COV]     4
+[ID_USER_TEST]     4
+[ID_USER_VSEQ]     6
+[RNTST]     1
+[SCB]     9
+[TEST_DONE]     1
+[UVM/RELNOTES]     1
+[UVM/REPORT/CATCHER]     1
+[VSEQ]     1
+
+$finish called from file "/usr/synopsys/vcs-L-2016.06//etc/uvm-1.2/base/uvm_root.svh", line 527.
+$finish at simulation time                  375
+
+---------------------------------------------------------------------------
+VCS Coverage Metrics: during simulation line, cond, tgl was monitored
+---------------------------------------------------------------------------
+
+ Coverage status: End of All Coverages ...
+
+           V C S   S i m u l a t i o n   R e p o r t 
+Time: 375
+CPU Time:      0.480 seconds;       Data structure size:   0.6Mb
+Wed Oct 14 00:01:05 2026
